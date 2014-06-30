@@ -6,7 +6,7 @@ AR = "arm-none-eabi-ar"
 CMSIS = "../STM32Cube_FW_F4/Drivers/CMSIS"
 HAL   = "../STM32Cube_FW_F4/Drivers/STM32F4xx_HAL_Driver"
 
-LIB   = 'libSTM32F4_CUBE.a'
+LIB   = 'libSTM32F4hal.a'
 
 CFLAGS = "-D #{PART}xx -D USE_HAL_DRIVER -Wall " \
     "-Os -nostdlib -fsigned-char -fno-inline -ffunction-sections " \
@@ -22,13 +22,27 @@ task :default => LIB do
     sh "#{AR} s #{LIB}"
 end
 
+rule '.o' => '.c' do |obj|
+    sh "#{CC} #{CFLAGS} -c -o #{obj} #{obj.name().ext('.c')}"
+    sh "#{AR} -r #{LIB} #{obj}"
+end
+
 desc "Clean cube hal library build artifacts"
-task :clean do
+task :clean_hal do
     sh "rm -f #{LIB}"
     sh "rm -f #{HAL}/Src/*.o"
 end
 
-rule '.o' => '.c' do |obj|
-    sh "#{CC} #{CFLAGS} -c -o #{obj} #{obj.name().ext('.c')}"
-    sh "#{AR} -r #{LIB} #{obj}"
+desc "Build mruby"
+task :mruby do
+    Dir.chdir('../mruby') do
+        sh 'rake MRUBY_CONFIG="../mruby-cube/build_config_mruby.rb"'
+    end
+end
+
+desc "Clean lightly mruby"
+task :clean_mruby do
+    Dir.chdir('../mruby') do
+        sh 'rake clean'
+    end
 end
