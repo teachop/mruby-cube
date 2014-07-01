@@ -1,9 +1,14 @@
-###Setup for STM32F429I-DISCO on Mac OS X Mavericks.
+###Setting Up for mruby-cube
 
+TODO
+
+###Flash Programming STM32F429I-DISCO from OS X
+
+References:
 - http://grafixmafia.net/updated-using-the-stm32f4-discovery-board-with-mac-osx-10-9-mavericks/
-- https://github.com/crimsonwoods/mirb-stm32f4discovery
+- https://github.com/texane/stlink/tree/master/doc/tutorial
 
-###Build stlink utility from git.
+For interface to the kit built-in jtag port, use this stlink utility from git.
 ```
 $ brew install libusb autogen automake wget pkg-config [ as needed... ]
 $ git clone https://github.com/texane/stlink.git
@@ -14,7 +19,7 @@ $ make
 $ sudo make install
 ```
 
-Test to be sure it finds the board.
+Do a quick test to be sure stlink finds the board.  Use ctrl-C to exit st-util.
 ```
 $ st-util
 2014-06-07T08:51:21 INFO src/stlink-usb.c: -- exit_dfu_mode
@@ -25,14 +30,29 @@ Chip ID is 00000419, Core ID is  2ba01477.
 Target voltage is 2883 mV.
 Listening at *:4242...
 ```
-Use ctrl-C to exit st-util.
 
-###Flashing the discovery kit.
-Command format is as follows.
+For simply flashing the discovery kit, the command format is as follows.  STM32F4 flash starts at 0x0800 0000 (this kit has 2Megs).
 ```
 st-flash [--reset] {read|write} path addr <size>
 ```
-STM32F4 flash starts at 0x0800 0000 (kit has 2Megs).
 ```
 $ st−flash write output.bin 0x8000000
 ```
+
+###Building mruby for the STM32F429I-DISCO
+
+References:
+- https://github.com/crimsonwoods/mirb-stm32f4discovery
+- https://github.com/mruby/mruby/tree/master/examples/targets
+
+The mruby project is designed for embedding and easily supports cross-building.  All that is required to build mruby (rake) is to use the build_config.rb found here.
+
+###Compiling the STM32CubeF4 HAL Drivers on OS X
+
+References:
+- https://github.com/fboris/STM32CubeMx_GNU_toolchain
+
+Unzip the STmicroelectronics STM32Cube_FW_F4_xxxx in the same parent folder containing the mruby-cube repository.  Within the mruby-cube folder, build the library using the Rakefile included here.
+
+
+
