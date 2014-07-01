@@ -6,31 +6,32 @@ AR = "arm-none-eabi-ar"
 CMSIS = "../STM32Cube_FW_F4/Drivers/CMSIS"
 HAL   = "../STM32Cube_FW_F4/Drivers/STM32F4xx_HAL_Driver"
 
-LIB   = 'libSTM32F4hal.a'
-
 CFLAGS = "-D #{PART}xx -D USE_HAL_DRIVER -Wall " \
     "-Os -nostdlib -fsigned-char -fno-inline -ffunction-sections " \
     "-mthumb -mlittle-endian -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 "\
     "-I./ -I#{HAL}/Inc -I#{CMSIS}/Include -I#{CMSIS}/Device/ST/STM32F4xx/Include"
 
+directory BUILD = 'Build'
+LIB   = "#{BUILD}/libSTM32F4hal.a"
+object=[]
 FileList["#{HAL}/Src/*.c"].each do |src|
-    file LIB => src.ext('.o')
+    object << "#{BUILD}/#{src.pathmap("%n")}.o"
 end
 
 desc "Make cube hal library"
-task :default => LIB do
-    sh "#{AR} s #{LIB}"
+task :default => [BUILD,LIB]
+
+file LIB => object do
+    sh "#{AR} -rs #{LIB} #{BUILD}/*.o"
 end
 
-rule '.o' => '.c' do |obj|
-    sh "#{CC} #{CFLAGS} -c -o #{obj} #{obj.name().ext('.c')}"
-    sh "#{AR} -r #{LIB} #{obj}"
+rule '.o' => ->(out){"#{HAL}/Src/#{out.pathmap("%n")}.c"} do |obj|
+    sh "#{CC} #{CFLAGS} -c -o #{obj.name} #{obj.source}"
 end
 
-desc "Clean cube hal library build artifacts"
-task :clean_hal do
-    sh "rm -f #{LIB}"
-    sh "rm -f #{HAL}/Src/*.o"
+desc "Clean deletes build directory"
+task :clean do
+    sh "rm -Rf #{BUILD}"
 end
 
 desc "Build mruby"
