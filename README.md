@@ -45,7 +45,12 @@ References:
 - https://github.com/crimsonwoods/mirb-stm32f4discovery
 - https://github.com/mruby/mruby/tree/master/examples/targets
 
-The mruby project is designed for embedding and easily supports cross-building.  All that is required to build mruby (rake) is to use the build_config.rb found here.
+First clone the mruby repository in the same parent folder containing the mruby-cube repository.
+
+The mruby project is designed for embedding and easily supports cross-building.  All that is required to build mruby (rake) is to use the local build_config.rb.  The local config will be passed to the mruby build using the rake task "mruby":
+```
+mruby-cube $ rake mruby
+```
 
 ###Compiling the STM32CubeF4 HAL Drivers on OS X
 
@@ -53,6 +58,9 @@ References:
 - https://github.com/fboris/STM32CubeMx_GNU_toolchain
 
 Unzip the STmicroelectronics STM32Cube_FW_F4_xxxx in the same parent folder containing the mruby-cube repository.  Within the mruby-cube folder, build the library using the Rakefile included here.
+```
+mruby-cube $ rake hal
+```
 
 
 

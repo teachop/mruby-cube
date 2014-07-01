@@ -11,15 +11,18 @@ CFLAGS = "-D #{PART}xx -D USE_HAL_DRIVER -Wall " \
     "-mthumb -mlittle-endian -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 "\
     "-I./ -I#{HAL}/Inc -I#{CMSIS}/Include -I#{CMSIS}/Device/ST/STM32F4xx/Include"
 
-directory BUILD = 'Build'
+directory BUILD = 'build'
 LIB   = "#{BUILD}/libSTM32F4hal.a"
 object=[]
 FileList["#{HAL}/Src/*.c"].each do |src|
     object << "#{BUILD}/#{src.pathmap("%n")}.o"
 end
 
-desc "Make cube hal library"
-task :default => [BUILD,LIB]
+desc "Build all"
+task :default =>[:hal, :mruby]
+
+desc "Build stm32cube hal library"
+task :hal => [BUILD,LIB]
 
 file LIB => object do
     sh "#{AR} -rs #{LIB} #{BUILD}/*.o"
@@ -29,15 +32,20 @@ rule '.o' => ->(out){"#{HAL}/Src/#{out.pathmap("%n")}.c"} do |obj|
     sh "#{CC} #{CFLAGS} -c -o #{obj.name} #{obj.source}"
 end
 
-desc "Clean deletes build directory"
-task :clean do
+desc "Clean all"
+task :clean => [:clean_build, :clean_mruby]
+
+desc "Deletes build output directory"
+task :clean_build do
     sh "rm -Rf #{BUILD}"
 end
 
-desc "Build mruby"
+desc "Build mruby library"
 task :mruby do
     Dir.chdir('../mruby') do
         sh 'rake MRUBY_CONFIG="../mruby-cube/build_config_mruby.rb"'
+        sh "mkdir -p ../mruby-cube/#{BUILD}"
+        sh "cp build/#{PART}/lib/libmruby.a ../mruby-cube/#{BUILD}"
     end
 end
 
