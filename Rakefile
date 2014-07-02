@@ -6,7 +6,7 @@ AR = "arm-none-eabi-ar"
 CMSIS = "../STM32CubeF4/Drivers/CMSIS"
 HAL   = "../STM32CubeF4/Drivers/STM32F4xx_HAL_Driver"
 directory BUILD = 'build'
-LIB   = "#{BUILD}/libSTM32F4hal.a"
+LIB   = "#{BUILD}/libstm32f4hal.a"
 
 CFLAGS = "-D #{PART}xx -D USE_HAL_DRIVER -Wall " \
     "-Os -nostdlib -fsigned-char -fno-inline -ffunction-sections " \
@@ -16,17 +16,13 @@ CFLAGS = "-D #{PART}xx -D USE_HAL_DRIVER -Wall " \
 desc "Build all"
 task :default =>[:hal, :mruby]
 
-# ---------- create a list of the hal library object files ----------
+
+# ---------- build stmicro hal library for cpu ----------
 object=[]
 FileList["#{HAL}/Src/*.c"].each do |src|
     object << "#{BUILD}/#{src.pathmap("%n")}.o"
 end
-if object.empty? then
-    puts "No hal library sources found."
-    exit
-end
-
-# ---------- build stmicro hal library for cpu ----------
+raise "No #{HAL} sources found." unless not object.empty?
 desc "Build stm32cube hal library"
 task :hal => LIB
 file LIB => [BUILD,*object] do
@@ -36,12 +32,10 @@ rule '.o' => ->(out){"#{HAL}/Src/#{out.pathmap("%n")}.c"} do |obj|
     sh "#{CC} #{CFLAGS} -c -o #{obj.name} #{obj.source}"
 end
 
-# ---------- build mruby as a library ----------
+
+# ---------- build mruby library ----------
 MRUBY = "../mruby"
-if not File.exists?("#{MRUBY}") then
-    puts "No mruby project directory found."
-    exit
-end
+raise "No #{MRUBY} directory found." unless File.exist?("#{MRUBY}")
 desc "Build mruby library"
 task :mruby => BUILD do
     Dir.chdir("#{MRUBY}") do
@@ -50,7 +44,8 @@ task :mruby => BUILD do
     cp "#{MRUBY}/build/#{PART}/lib/libmruby.a", "#{BUILD}"
 end
 
-# ---------- clean up for a rebuild ----------
+
+# ---------- clean up before a rebuild ----------
 desc "Delete build outputs"
 task :clean do
     rm_rf "#{BUILD}"

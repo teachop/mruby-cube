@@ -1,20 +1,16 @@
 ###Build mruby and STM32CubeF4 HAL for STM32F429I-DISCO
-
-In a parent directory clone this teachop/mruby-cube repository.
-
-Clone the mruby/mruby repository into the same parent folder.
-
-Unzip the STmicroelectronics STM32Cube_FW_F4_xxxx into the same parent folder.  Rename to "STM32CubeF4".
-
-Within the mruby-cube folder, build the library using the Rakefile included here.
+- In a parent directory clone [this](https://github.com/teachop/mruby-cube) mruby-cube repository.
+- Clone the mruby/mruby repository into the same parent folder.
+- Extract STM32Cube_FW_F4_xxxx into the same parent folder.
+- **Rename STM32Cube_FW_F4_xxxx folder to "STM32CubeF4"**.
+- Within the mruby-cube folder, build everything using rake.
 ```
 $ cd mruby-cube
 $ rake
 ```
 
 ###Flash Programming the kit
-
-The host was Mac OS X Mavericks.  For interface to the kit built-in jtag port, use this stlink utility from git.
+On Mac OS X Mavericks, to interface to the kit built-in jtag port, use [stlink](https://github.com/texane/stlink) stlink utility.
 ```
 $ brew install libusb autogen automake wget pkg-config [ as needed... ]
 $ git clone https://github.com/texane/stlink.git
@@ -39,9 +35,7 @@ Listening at *:4242...
 
 For simply flashing the discovery kit, the command format is as follows.  STM32F4 flash starts at 0x0800 0000 (this kit has 2Megs).
 ```
-st-flash [--reset] {read|write} path addr <size>
-```
-```
+# st-flash [--reset] {read|write} path addr <size>
 $ st−flash write output.bin 0x8000000
 ```
 
@@ -51,4 +45,3 @@ $ st−flash write output.bin 0x8000000
 - https://github.com/fboris/STM32CubeMx_GNU_toolchain
 - http://grafixmafia.net/updated-using-the-stm32f4-discovery-board-with-mac-osx-10-9-mavericks/
 - https://github.com/texane/stlink/tree/master/doc/tutorial
-
