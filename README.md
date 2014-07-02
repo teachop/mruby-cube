@@ -1,14 +1,20 @@
-###Setting Up for mruby-cube
+###Build mruby and STM32CubeF4 HAL for STM32F429I-DISCO
 
-TODO
+In a parent directory clone this teachop/mruby-cube repository.
 
-###Flash Programming STM32F429I-DISCO from OS X
+Clone the mruby/mruby repository into the same parent folder.
 
-References:
-- http://grafixmafia.net/updated-using-the-stm32f4-discovery-board-with-mac-osx-10-9-mavericks/
-- https://github.com/texane/stlink/tree/master/doc/tutorial
+Unzip the STmicroelectronics STM32Cube_FW_F4_xxxx into the same parent folder.  Rename to "STM32CubeF4".
 
-For interface to the kit built-in jtag port, use this stlink utility from git.
+Within the mruby-cube folder, build the library using the Rakefile included here.
+```
+$ cd mruby-cube
+$ rake
+```
+
+###Flash Programming the kit
+
+The host was Mac OS X Mavericks.  For interface to the kit built-in jtag port, use this stlink utility from git.
 ```
 $ brew install libusb autogen automake wget pkg-config [ as needed... ]
 $ git clone https://github.com/texane/stlink.git
@@ -39,28 +45,10 @@ st-flash [--reset] {read|write} path addr <size>
 $ st−flash write output.bin 0x8000000
 ```
 
-###Building mruby for the STM32F429I-DISCO
-
-References:
+####References
 - https://github.com/crimsonwoods/mirb-stm32f4discovery
 - https://github.com/mruby/mruby/tree/master/examples/targets
-
-First clone the mruby repository in the same parent folder containing the mruby-cube repository.
-
-The mruby project is designed for embedding and easily supports cross-building.  All that is required to build mruby (rake) is to use the local build_config.rb.  The local config will be passed to the mruby build using the rake task "mruby":
-```
-mruby-cube $ rake mruby
-```
-
-###Compiling the STM32CubeF4 HAL Drivers on OS X
-
-References:
 - https://github.com/fboris/STM32CubeMx_GNU_toolchain
-
-Unzip the STmicroelectronics STM32Cube_FW_F4_xxxx in the same parent folder containing the mruby-cube repository.  Within the mruby-cube folder, build the library using the Rakefile included here.
-```
-mruby-cube $ rake hal
-```
-
-
+- http://grafixmafia.net/updated-using-the-stm32f4-discovery-board-with-mac-osx-10-9-mavericks/
+- https://github.com/texane/stlink/tree/master/doc/tutorial
 
