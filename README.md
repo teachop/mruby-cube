@@ -1,8 +1,9 @@
-###Build mruby and STM32CubeF4 HAL for STM32F429I-DISCO
-- In a parent directory clone [this](https://github.com/teachop/mruby-cube) mruby-cube repository.
+###Build mruby & STM32CubeF4 libraries for STM32F429I-DISCO
+- In a parent directory clone the [mruby-cube](https://github.com/teachop/mruby-cube) repository.
 - Clone the mruby/mruby repository into the same parent folder.
 - Extract STM32Cube_FW_F4_xxxx into the same parent folder.
-- **Rename STM32Cube_FW_F4_xxxx folder to "STM32CubeF4"**.
+- **Rename STM32Cube_FW_F4_xxxx folder to STM32CubeF4**.
+- TODO Need script to **fix dos backslash path errors** in stmicro bsp files :(
 - Within the mruby-cube folder, build everything using rake.
 ```
 $ cd mruby-cube
@@ -10,7 +11,7 @@ $ rake
 ```
 
 ###Flash Programming the kit
-On Mac OS X Mavericks, to interface to the kit built-in jtag port, use [stlink](https://github.com/texane/stlink) stlink utility.
+On Mac OS X Mavericks, to interface to the kit built-in jtag port, use the [stlink](https://github.com/texane/stlink) utility.
 ```
 $ brew install libusb autogen automake wget pkg-config [ as needed... ]
 $ git clone https://github.com/texane/stlink.git
