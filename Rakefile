@@ -1,3 +1,5 @@
+verbose(false)
+
 PART = "STM32F429"
 
 CC = "arm-none-eabi-gcc"
@@ -24,13 +26,14 @@ def libraryTask(output,input,taskSym)
     raise "No #{input} sources found for #{output}." unless not object.empty?
     task taskSym => output
     file output => [BUILD,*object] do
-        puts "Building #{output} from #{input}"
         object.each do |obj|
+            puts "AR    #{obj} -> #{output}"
             sh "#{AR} -r #{output} #{obj}"
         end
         sh "#{AR} -s #{output}"
     end
     rule '.o' => ->(out){"#{input}/#{out.pathmap("%n")}.c"} do |obj|
+        puts "CC    #{obj.source.pathmap("%f")} -> #{obj.name}"
         sh "#{CC} #{CFLAGS} -c -o #{obj.name} #{obj.source}"
     end
 end
