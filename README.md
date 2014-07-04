@@ -2,8 +2,8 @@
 - In a parent directory clone the [mruby-cube](https://github.com/teachop/mruby-cube) repository.
 - Clone the mruby/mruby repository into the same parent folder.
 - Extract STM32Cube_FW_F4_xxxx into the same parent folder.
-- **Rename STM32Cube_FW_F4_xxxx folder to STM32CubeF4**.
-- TODO Need script to **fix dos backslash path errors** in stmicro bsp files :(
+- Rename this STM32Cube_FW_F4_xxxx folder to **STM32CubeF4**.
+- **Warning** there are dos-only backslash paths in stmicro bsp files :(  They need fixed before building.  There is a hack-ish task for doing this in the Rakefile.
 - Within the mruby-cube folder, build everything using rake.
 ```
 $ cd mruby-cube

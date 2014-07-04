@@ -73,3 +73,36 @@ end
 desc "Build all"
 task :default =>[:hal, :bsp, :mruby]
 
+
+# ---------- hack stmicro dos include paths ----------
+desc "Fix dos-only stmicro include syntax"
+task :slash do
+    slashed=[]
+    ["#{BSP}",
+    "#{BSP}/../Components/l3gd20",
+    "#{BSP}/../Components/stmpe811",
+    "#{BSP}/../Components/ili9341"].each do |prefix|
+        FileList["#{prefix}/*.c","#{prefix}/*.h"].each do |src|
+            File.open(src,'r').each_line do |line|
+                if line.match(/\s*#\s*include.*\\.*/)
+                    # make a list of files with problems
+                    slashed << src
+                    break
+                end
+            end
+        end
+    end
+    slashed.each do |src|
+        puts src
+        FileUtils.mv(src,src+'.bak')
+        File.open(src,'w') do |dest|
+            File.open(src+'.bak','r').each_line do |line|
+                if line.match(/\s*#\s*include.*\\.*/)
+                    # replace backslashes within include lines
+                    line.gsub!('\\','/')
+                end
+                dest.write(line)
+            end
+        end
+    end
+end
