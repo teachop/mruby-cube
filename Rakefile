@@ -39,6 +39,16 @@ def libraryTask(output,input,taskSym)
 end
 
 
+# ---------- library config header ----------
+conf_h = "stm32f4xx_hal_conf.h"
+template_h = "#{HAL}/Inc/stm32f4xx_hal_conf_template.h"
+desc "Import generic hal library configuration header"
+task :config => template_h
+file conf_h => template_h do
+    cp template, conf_h
+end
+
+
 # ---------- libraries for cpu and kit ----------
 desc "Build stm32f429 cpu hal library"
 libraryTask("#{BUILD}/libstm32f4hal.a", "#{HAL}/Src", :hal)
@@ -71,7 +81,7 @@ end
 
 # ---------- default build everything ----------
 desc "Build all"
-task :default =>[:hal, :bsp, :mruby]
+task :default =>[conf_h, :hal, :bsp, :mruby]
 
 
 # ---------- hack stmicro dos include paths ----------
@@ -94,7 +104,7 @@ task :slash do
     end
     slashed.each do |src|
         puts src
-        FileUtils.mv(src,src+'.bak')
+        mv(src,src+'.bak')
         File.open(src,'w') do |dest|
             File.open(src+'.bak','r').each_line do |line|
                 if line.match(/\s*#\s*include.*\\.*/)
