@@ -45,7 +45,7 @@ template_h = "#{HAL}/Inc/stm32f4xx_hal_conf_template.h"
 desc "Import generic hal library configuration header"
 task :config => template_h
 file conf_h => template_h do
-    cp template, conf_h
+    cp template_h, conf_h
 end
 
 
