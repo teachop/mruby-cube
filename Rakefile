@@ -65,7 +65,7 @@ task :mruby => BUILD do
   Dir.chdir("#{MRUBY}") do
     sh 'rake MRUBY_CONFIG="../mruby-cube/build_config_mruby.rb"'
   end
-  cp "#{MRUBY}/build/#{PART}/lib/libmruby.a", "#{BUILD}"
+  cp "#{MRUBY}/build/#{PART.downcase}/lib/libmruby.a", "#{BUILD}"
 end
 
 
