@@ -5,7 +5,7 @@ MRuby::Build.new do |conf|
   if ENV['VisualStudioVersion'] || ENV['VSINSTALLDIR']
     toolchain :visualcpp
   else
-    toolchain :gcc
+    toolchain :clang
   end
 
   enable_debug
