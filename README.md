@@ -1,6 +1,6 @@
 ###Build mruby & STM32CubeF4 libraries for STM32F429I-DISCO
 - In a parent directory clone the [mruby-cube](https://github.com/teachop/mruby-cube) repository.
-- Clone the mruby/mruby repository into the same parent folder.
+- Clone the [mruby](https://github.com/mruby/mruby) repository into the same parent folder.
 - Extract STM32Cube_FW_F4_xxxx into the same parent folder.
 - Rename this STM32Cube_FW_F4_xxxx folder to **STM32CubeF4**.
 - **Warning** there are dos-only backslash paths in stmicro bsp files :(  They need fixed before building.  There is a hack-ish task for doing this in the Rakefile.
